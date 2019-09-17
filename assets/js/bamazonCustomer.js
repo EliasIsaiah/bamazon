@@ -26,6 +26,22 @@ connection.connect(function (err) {
     // connection.end();
 });
 
+const gatherCustData = function() {
+    inquirer.prompt([{
+        type: "number",
+        name: "productID",
+        message: "Input the Product ID of the Product you would like to buy",
+    },
+    {
+        type: "number",
+        name: "qty",
+        message: "How many would you like to buy?"
+    }]).then((answers) => {
+        console.log(answers);
+        // doAction(answers.productID, answers.qty);
+    })
+}
+
 
 const doQuery = function (command, input) {
     console.log("adding item");
@@ -83,7 +99,6 @@ const doQuery = function (command, input) {
 
 const productTable = new Table({
     head: ['ID', 'NAME', 'PRICE($)']
-    // colWidths: [10, 20, 10]   
 });
 
 console.log(`
@@ -111,8 +126,8 @@ const initQuery = connection.query(
             )
         })
         console.log(productTable.toString());
+        gatherCustData();
         // console.log(results);
     }
 );
-
 
