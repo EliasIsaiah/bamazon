@@ -82,8 +82,8 @@ const doQuery = function (command, input) {
 }
 
 const productTable = new Table({
-    head: ['ID', 'NAME', 'PRICE($)'],
-    colWidths: [10, 200, 100]    
+    head: ['ID', 'NAME', 'PRICE($)']
+    // colWidths: [10, 20, 10]   
 });
 
 console.log(`
