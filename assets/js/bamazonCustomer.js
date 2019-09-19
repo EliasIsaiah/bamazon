@@ -5,6 +5,20 @@ const Table = require("cli-table");
 //return results.map( r => r.item_name )
 /* const chosenItem = results.find( r => r.item_name === answer.choice); */
 
+const warehouse = {
+
+    checkStock: function (id, qty) {
+        console.log("adding item");
+
+        const hasStock = connection.query(
+            `SELECT stock_quantity from products WHERE item_id=${id}`,
+            (err, results) => {
+                if (err) return err;
+                console.log(results);
+            }
+        )
+    },
+}
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -26,7 +40,7 @@ connection.connect(function (err) {
     // connection.end();
 });
 
-const gatherCustData = function() {
+const gatherCustData = function () {
     inquirer.prompt([{
         type: "number",
         name: "productID",
@@ -38,64 +52,11 @@ const gatherCustData = function() {
         message: "How many would you like to buy?"
     }]).then((answers) => {
         console.log(answers);
-        // doAction(answers.productID, answers.qty);
+
+        warehouse.checkStock(answers.productID, answers.qty);
     })
 }
 
-
-const doQuery = function (command, input) {
-    console.log("adding item");
-
-    switch (command) {
-
-        case "artist":
-
-            let artistQuery = connection.query(
-                `SELECT * FROM top_songs_table WHERE artist_name='${input}'`,
-                (err, results) => {
-
-                    if (err) throw err;
-                    console.log(results);
-                }
-            );
-
-            console.log(artistQuery.sql);
-            break;
-
-        case "range":
-
-            let splitArr = input.split(",");
-            let rangeQuery = connection.query(
-
-                `SELECT * FROM top_songs_table WHERE ID BETWEEN ${splitArr[0]} AND ${splitArr[1]}`,
-                (err, results) => {
-
-                    if (err) throw err;
-                    console.log(results);
-                }
-            );
-
-            console.log(rangeQuery.sql);
-            break;
-
-        case "song":
-
-            let songQuery = connection.query(
-
-                `SELECT * FROM top_songs_table WHERE song_name='${input}'`,
-                (err, results) => {
-
-                    if (err) throw err;
-                    console.log(results);
-                }
-            );
-
-            console.log(songQuery.sql);
-            break;
-    }
-
-    // console.log(query.sql);
-}
 
 const productTable = new Table({
     head: ['ID', 'NAME', 'PRICE($)']
@@ -116,7 +77,7 @@ const initQuery = connection.query(
     (err, results) => {
         if (err) throw err;
         results.map((item, index) => {
-            
+
             id = item.item_id;
             name = item.product_name;
             price = item.price;
@@ -126,6 +87,7 @@ const initQuery = connection.query(
             )
         })
         console.log(productTable.toString());
+        console.log(productTable);
         gatherCustData();
         // console.log(results);
     }
