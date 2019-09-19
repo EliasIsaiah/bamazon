@@ -7,14 +7,23 @@ const Table = require("cli-table");
 
 const warehouse = {
 
+    productsArr: [],
+
     checkStock: function (id, qty) {
         console.log("adding item");
 
-        const hasStock = connection.query(
+        connection.query(
+            // `SELECT stock_quantity from products WHERE item_id=${id} AND stock_quantity >= ${qty}`,
             `SELECT stock_quantity from products WHERE item_id=${id}`,
+
+
             (err, results) => {
                 if (err) return err;
-                console.log(results);
+                if (results[0].stock_quantity < qty) {
+                    console.log("The warehouse doesn't have that many in stock");
+                    return;
+                }
+                // console.log(results[0].stock_quantity);
             }
         )
     },
@@ -87,7 +96,6 @@ const initQuery = connection.query(
             )
         })
         console.log(productTable.toString());
-        console.log(productTable);
         gatherCustData();
         // console.log(results);
     }
