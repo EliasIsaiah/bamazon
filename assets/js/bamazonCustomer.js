@@ -1,6 +1,7 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 const Table = require("cli-table");
+// const warehouse = require("./warehouse.js");
 
 //return results.map( r => r.item_name )
 /* const chosenItem = results.find( r => r.item_name === answer.choice); */
@@ -102,7 +103,7 @@ const warehouse = {
 
                 if (results[0].stock_quantity < qty) {
 
-                    this.ackMessage(`The warehouse only has ${stockQty} ${stockName} in stock`)
+                    this.ackMessage(`The warehouse only has ${stockQty} ${stockName}s in stock`)
                 }
                 else {
                     let newOnHand = stockQty - qty;
@@ -119,6 +120,48 @@ const warehouse = {
             }
         )
     },
+
+    checkLowInventory: function() {
+        console.log("checking low inventory")
+
+        connection.query(
+            `SELECT * from products
+            WHERE stock_quantity > 5`,
+
+            (err, results) => {
+                if (err) throw err;
+                results.map((item) => {
+
+                    id = item.item_id;
+                    name = item.product_name;
+                    dept = item.department_name;
+                    price = item.price;
+                    onHand = item.stock_quantity;
+
+                    productTable.push(
+                        [id, name, price, dept, onHand]
+                    )
+                })
+
+                console.log(productTable.toString());
+            }
+        )
+    },
+    // addToInventory: function(id, qty) {
+    //     connection.query(
+
+    //         'SELECT * from products WHERE stock_quantity > 5',
+
+
+    //         (err, results) => {
+    //             if (err) throw err;
+
+    //             results.map((item) => {
+
+    //             });
+    //         }
+    //     )
+    // }
 }
 
 const customer = {
@@ -133,12 +176,15 @@ const customer = {
             type: "number",
             name: "qty",
             message: "How many would you like to buy?"
-        }]).then((answers) => {
+        }
+    ]).then((answers) => {
             console.log(answers);
 
-            (warehouse.tryBuy(answers.productID, answers.qty))
+            warehouse.tryBuy(answers.productID, answers.qty)
         })
     },
 }
 
 warehouse.showTable();
+
+module.exports = warehouse;
