@@ -73,7 +73,7 @@ const manager = {
         inquirer.prompt([{
             type: "list",
             name: "managerChoice",
-            message: "Input the Product ID of the Product you would like to buy",
+            message: "Choose an Action",
             choices: ["View products for sale", "View low inventory", "Add to inventory", "Add new Product"]
         },
         ]).then((answers) => {
