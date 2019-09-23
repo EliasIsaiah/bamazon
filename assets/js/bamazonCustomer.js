@@ -1,25 +1,8 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 const Table = require("cli-table");
-// const warehouse = require("./warehouse.js");
+const connection = require("./connection.js")
 
-//return results.map( r => r.item_name )
-/* const chosenItem = results.find( r => r.item_name === answer.choice); */
-
-
-const connection = mysql.createConnection({
-    host: "localhost",
-
-    // Your port; if not 3306
-    port: 3306,
-
-    // Your username
-    user: "root",
-
-    // Your password
-    password: "root",
-    database: "bamazon"
-});
 
 connection.connect(function (err) {
     if (err) throw err;
@@ -120,48 +103,6 @@ const warehouse = {
             }
         )
     },
-
-    checkLowInventory: function() {
-        console.log("checking low inventory")
-
-        connection.query(
-            `SELECT * from products
-            WHERE stock_quantity > 5`,
-
-            (err, results) => {
-                if (err) throw err;
-                results.map((item) => {
-
-                    id = item.item_id;
-                    name = item.product_name;
-                    dept = item.department_name;
-                    price = item.price;
-                    onHand = item.stock_quantity;
-
-                    productTable.push(
-                        [id, name, price, dept, onHand]
-                    )
-                })
-
-                console.log(productTable.toString());
-            }
-        )
-    },
-    // addToInventory: function(id, qty) {
-    //     connection.query(
-
-    //         'SELECT * from products WHERE stock_quantity > 5',
-
-
-    //         (err, results) => {
-    //             if (err) throw err;
-
-    //             results.map((item) => {
-
-    //             });
-    //         }
-    //     )
-    // }
 }
 
 const customer = {
